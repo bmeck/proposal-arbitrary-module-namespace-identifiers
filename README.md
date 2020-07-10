@@ -7,7 +7,7 @@ Allow the ability to create modules which integrate using non-IdentifierName bin
 Other languages can produce values that do not match the potential strings that match IdentifierName. E.G. due to [name mangling](https://en.wikipedia.org/wiki/Name_mangling).
 
 WebAssembly can already create such bindings since they [only constrain bindings to be valid
-utf8 strings](https://webassembly.github.io/spec/core/text/values.html#names).
+utf8 strings](https://webassembly.github.io/spec/core/binary/values.html#binary-utf8).
 
 Non-identifier names can already be imported from ModuleNamespaceObjects since [Abstract Module Records](https://tc39.es/ecma262/#_ref_444) have no constraints on their exported names.
 
