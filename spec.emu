@@ -4,20 +4,56 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <script src="./spec.js"></script>
 <pre class="metadata">
-title: Proposal Title Goes Here
-stage: -1
-contributors: Your Name(s) Here
+title: Arbitrary Module Namespace Identifiers
+stage: 0
+contributors: Bradley Farias
+location: https://github.com/bmeck/proposal-arbitrary-module-namespace-identifiers
 </pre>
+<emu-clause id="sec-scope">
+  <h1>Scope</h1>
+  <p>
+    This is the spec text of the <a href="https://github.com/bmeck/proposal-arbitrary-module-namespace-identifiers/">Arbitrary Module Namespace Identifiers</a> in ECMAScript.
+  </p>
+  <p>
+    This proposal allows for any valid UTF8 string to be imported or exported from a Module.
+  </p>
+</emu-clause>
+
+<emu-clause id="sec-punctuators">
+  <h1>Exports (<a href="https://tc39.github.io/ecma262/#sec-exports">15.2.3</a>)</h1>
+  <h2>Syntax</h2>
+  <emu-grammar type="definition">
+    <ins class="block">
+    ModuleExportName:
+      StringLiteral
+    </ins>
+
+    ImportSpecifier:
+      ImportedBinding
+      IdentifierName as ImportedBinding
+      <ins>ModuleExportName as ImportedBinding</ins>
+
+    ExportSpecifier:
+      IdentifierName
+      IdentifierName as IdentifierName
+      <ins>IdentifierName as ModuleExportName</ins>
+  </emu-grammar>
+</emu-clause>
 
 <emu-clause id="sec-demo-clause">
-  <h1>This is an emu-clause</h1>
-  <p>This is an algorithm:</p>
+  <h1>Static Semantics: Early Errors</h1>
+  <emu-grammar>
+  ModuleExportName: StringLiteral
+  </emu-grammar>
   <emu-alg>
-    1. Let _proposal_ be *undefined*.
-    1. If IsAccepted(_proposal_),
-      1. Let _stage_ be *0*.
-    1. Else,
-      1. Let _stage_ be *-1*.
-    1. Return ? ToString(_proposal_).
+    1. Let _string_ be the result of evaluating |StringLiteral|.
+    2. Let _strLen_ be the number of code units in string.
+    3. Let _k_ be 0.
+    4. Repeat,
+      1. If _k_ equals strLen, return.
+      2. Let _C_ be the code unit at index _k_ within _string_.
+      3. Let _cp_ be ! CodePointAt(_string_, _k_).
+      4. If _cp_.[[IsUnpairedSurrogate]] is *true*, throw a *SyntaxError* exception.
+      5. Set _k_ to _k_ + _cp_.[[CodeUnitCount]].
   </emu-alg>
 </emu-clause>
