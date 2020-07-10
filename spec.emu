@@ -19,20 +19,30 @@ location: https://github.com/bmeck/proposal-arbitrary-module-namespace-identifie
   </p>
 </emu-clause>
 
-<emu-clause id="sec-punctuators">
-  <h1>Exports (<a href="https://tc39.github.io/ecma262/#sec-exports">15.2.3</a>)</h1>
+<emu-clause id="sec-modules">
+  <h1>Modules (<a href="https://tc39.github.io/ecma262/#sec-modules">15.1</a>)</h1>
   <h2>Syntax</h2>
   <emu-grammar type="definition">
     <ins class="block">
     ModuleExportName:
       StringLiteral
     </ins>
-
+  </emu-grammar>
+</emu-clause>
+<emu-clause id="sec-imports">
+  <h1>Imports (<a href="https://tc39.github.io/ecma262/#sec-imports">15.2.2</a>)</h1>
+  <h2>Syntax</h2>
+  <emu-grammar type="definition">
     ImportSpecifier:
       ImportedBinding
       IdentifierName as ImportedBinding
       <ins>ModuleExportName as ImportedBinding</ins>
-
+  </emu-grammar>
+</emu-clause>
+<emu-clause id="sec-exports">
+  <h1>Exports (<a href="https://tc39.github.io/ecma262/#sec-exports">15.2.3</a>)</h1>
+  <h2>Syntax</h2>
+  <emu-grammar type="definition">
     ExportSpecifier:
       IdentifierName
       IdentifierName as IdentifierName
@@ -40,10 +50,10 @@ location: https://github.com/bmeck/proposal-arbitrary-module-namespace-identifie
   </emu-grammar>
 </emu-clause>
 
-<emu-clause id="sec-demo-clause">
+<emu-clause id="sec-module-semantics">
   <h1>Static Semantics: Early Errors</h1>
   <emu-grammar>
-  ModuleExportName: StringLiteral
+    ModuleExportName: StringLiteral
   </emu-grammar>
   <emu-alg>
     1. Let _string_ be the result of evaluating |StringLiteral|.
