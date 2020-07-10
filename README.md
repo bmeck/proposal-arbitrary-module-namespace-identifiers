@@ -1,60 +1,39 @@
-# template-for-proposals
+# Arbitrary Module Namespace Identifiers
 
-A repository template for ECMAScript proposals.
+Allow the ability to create modules which integrate using non-IdentifierName bindings.
 
-## Before creating a proposal
+## Problem
 
-Please ensure the following:
-  1. You have read the [process document](https://tc39.github.io/process-document/)
-  1. You have reviewed the [existing proposals](https://github.com/tc39/proposals/)
-  1. You are aware that your proposal requires being a member of TC39, or locating a TC39 delegate to "champion" your proposal
+Other languages can produce values that do not match the potential strings that match IdentifierName. E.G. due to [name mangling](https://en.wikipedia.org/wiki/Name_mangling).
 
-## Create your proposal repo
+WebAssembly can already create such bindings since they [only constrain bindings to be valid
+utf8 strings](https://webassembly.github.io/spec/core/text/values.html#names).
 
-Follow these steps:
-  1.  Click the green ["use this template"](https://github.com/tc39/template-for-proposals/generate) button in the repo header. (Note: Do not fork this repo in GitHub's web interface, as that will later prevent transfer into the TC39 organization)
-  1.  Go to your repo settings “Options” page, under “GitHub Pages”, and set the source to the **master branch** (and click Save, if it does not autosave this setting)
-      1. check "Enforce HTTPS"
-      1. On "Options", under "Features", Ensure "Issues" is checked, and disable "Wiki", and "Projects" (unless you intend to use Projects)
-      1. Under "Merge button", check "automatically delete head branches"
-<!--
-  1.  Avoid merge conflicts with build process output files by running:
-      ```sh
-      git config --local --add merge.output.driver true
-      git config --local --add merge.output.driver true
-      ```
-  1.  Add a post-rewrite git hook to auto-rebuild the output on every commit:
-      ```sh
-      cp hooks/post-rewrite .git/hooks/post-rewrite
-      chmod +x .git/hooks/post-rewrite
-      ```
--->
-  1.  ["How to write a good explainer"][explainer] explains how to make a good first impression.
+Non-identifier names can already be imported from ModuleNamespaceObjects since [Abstract Module Records](https://tc39.es/ecma262/#_ref_444) have no constraints on their exported names.
 
-      > Each TC39 proposal should have a `README.md` file which explains the purpose
-      > of the proposal and its shape at a high level.
-      >
-      > ...
-      >
-      > The rest of this page can be used as a template ...
+```mjs
+import * as odd from 'wasm';
+odd['@foo']
+```
 
-      Your explainer can point readers to the `index.html` generated from `spec.emu`
-      via markdown like
+Non-identifier names can be exported using `export * from` similarly.
 
-      ```markdown
-      You can browse the [ecmarkup output](https://ACCOUNT.github.io/PROJECT/)
-      or browse the [source](https://github.com/ACCOUNT/PROJECT/blob/master/spec.emu).
-      ```
+```mjs
+export * from 'wasm'; // will export "@foo"
+```
 
-      where *ACCOUNT* and *PROJECT* are the first two path elements in your project's Github URL.
-      For example, for github.com/**tc39**/**template-for-proposals**, *ACCOUNT* is "tc39"
-      and *PROJECT* is "template-for-proposals".
+However, non-identifier names cannot be imported by name, exported by name, nor exported from by name. This proposal seeks to allow integration such that support to create bindings with non-identifier names can be used in those locations.
 
+## Syntax
 
-## Maintain your proposal repo
+Alteration of `ExportSpecifier` and `ImportSpecifier` are the only changes proposed:
 
-  1. Make your changes to `spec.emu` (ecmarkup uses HTML syntax, but is not HTML, so I strongly suggest not naming it ".html")
-  1. Any commit that makes meaningful changes to the spec, should run `npm run build` and commit the resulting output.
-  1. Whenever you update `ecmarkup`, run `npm run build` and commit any changes that come from that dependency.
-  
-  [explainer]: https://github.com/tc39/how-we-work/blob/master/explainer.md
+```mjs
+import {"@foo" as foo} from "wasm";
+export {foo as "@foo"};
+export {"@bar" as bar} from "wasm";
+```
+
+### Concerns
+
+WebAssembly has a constraint that names must be valid UTF-8. In order to not break integration literals for the syntax must ensure they produce valid UTF-8.
