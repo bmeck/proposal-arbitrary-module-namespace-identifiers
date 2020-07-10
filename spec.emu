@@ -61,8 +61,8 @@ location: https://github.com/bmeck/proposal-arbitrary-module-namespace-identifie
     3. Let _k_ be 0.
     4. Repeat,
       1. If _k_ equals _strLen_, return.
-      3. Let _cp_ be ! CodePointAt(_string_, _k_).
-      4. If _cp_.[[IsUnpairedSurrogate]] is *true*, throw a *SyntaxError* exception.
-      5. Set _k_ to _k_ + _cp_.[[CodeUnitCount]].
+      2. Let _cp_ be ! CodePointAt(_string_, _k_).
+      3. If _cp_.[[IsUnpairedSurrogate]] is *true*, throw a *SyntaxError* exception.
+      4. Set _k_ to _k_ + _cp_.[[CodeUnitCount]].
   </emu-alg>
 </emu-clause>
