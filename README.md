@@ -41,11 +41,29 @@ WebAssembly has a constraint that names must be valid UTF-8. In order to not bre
 This means an early error must be performed so that any literal in these locations
 disallows unpaired surrogates via a static check algorithm like the following:
 
+```
+ModuleExportName:
+  StringLiteral
+
+ImportSpecifier:
+  ImportedBinding
+  IdentifierName as ImportedBinding
+  ModuleExportName as ImportedBinding
+
+ExportSpecifier:
+  IdentifierName
+  IdentifierName as IdentifierName
+  IdentifierName as ModuleExportName
+
+Static Semantics: Early Errors
+ModuleExportName: StringLiteral
+
 1. Let strLen be the number of code units in string.
-1. Let k be 0.
-1. Repeat,
-  1. If k equals strLen, return.
-  1. Let C be the code unit at index k within string.
-  1. Let cp be ! CodePointAt(string, k).
-  1. If cp.[[IsUnpairedSurrogate]] is true, throw a SyntaxError exception.
-  1. Set k to k + cp.[[CodeUnitCount]].
+2. Let k be 0.
+3. Repeat,
+    1. If k equals strLen, return.
+    2. Let C be the code unit at index k within string.
+    3. Let cp be ! CodePointAt(string, k).
+    4. If cp.[[IsUnpairedSurrogate]] is true, throw a SyntaxError exception.
+    5. Set k to k + cp.[[CodeUnitCount]].
+```
