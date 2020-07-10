@@ -61,7 +61,6 @@ location: https://github.com/bmeck/proposal-arbitrary-module-namespace-identifie
     3. Let _k_ be 0.
     4. Repeat,
       1. If _k_ equals _strLen_, return.
-      2. Let _C_ be the code unit at index _k_ within _string_.
       3. Let _cp_ be ! CodePointAt(_string_, _k_).
       4. If _cp_.[[IsUnpairedSurrogate]] is *true*, throw a *SyntaxError* exception.
       5. Set _k_ to _k_ + _cp_.[[CodeUnitCount]].
