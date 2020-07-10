@@ -2,6 +2,8 @@
 
 Allow the ability to create modules which integrate using non-IdentifierName bindings.
 
+[Rendered Spec Text](https://bmeck.github.io/proposal-arbitrary-module-namespace-identifiers/)
+
 ## Problem
 
 Other languages can produce values that do not match the potential strings that match IdentifierName. E.G. due to [name mangling](https://en.wikipedia.org/wiki/Name_mangling).
