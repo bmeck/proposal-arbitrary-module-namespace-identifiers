@@ -57,12 +57,23 @@ location: https://github.com/bmeck/proposal-arbitrary-module-namespace-identifie
   </emu-grammar>
   <emu-alg>
     1. Let _string_ be the result of evaluating |StringLiteral|.
-    2. Let _strLen_ be the number of code units in string.
-    3. Let _k_ be 0.
-    4. Repeat,
+    2. If IsValidUnicode(_string_) is *false*, throw a *SyntaxError* exception.
+  </emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-isvalidunicode" aoid="IsValidUnicode">
+  <h1>Static Semantics: IsValidUnicode( _string_ )</h1>
+  <p>
+    The abstract operation IsValidUnicode takes an argument _string_ ( a String ). It interprets _string_ as a sequence of UTF-16 encoded code points, as described in <emu-xref href="#sec-ecmascript-language-types-string-type"></emu-xref>, and returns if it is a complete valid UTF-16 sequence. It performs the following steps when called:
+  </p>
+  <emu-alg>
+    1. Let _strLen_ be the number of code units in string.
+    2. Let _k_ be 0.
+    3. Repeat,
       1. If _k_ equals _strLen_, return.
       2. Let _cp_ be ! CodePointAt(_string_, _k_).
-      3. If _cp_.[[IsUnpairedSurrogate]] is *true*, throw a *SyntaxError* exception.
+      3. If _cp_.[[IsUnpairedSurrogate]] is *true*, return *false*.
       4. Set _k_ to _k_ + _cp_.[[CodeUnitCount]].
+    4. Return *true*.
   </emu-alg>
 </emu-clause>
